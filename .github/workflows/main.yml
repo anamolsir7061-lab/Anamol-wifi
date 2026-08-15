@@ -19,12 +19,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Fix Missing Gradle Files automatically
+      - name: Generate Missing Debug Keystore
         run: |
-          if [ ! -f "gradlew" ]; then
-            gradle wrapper
-          fi
-          chmod +x gradlew || true
+          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US" || true
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx4g" -Dkotlin.compiler.execution.strategy=in-process
