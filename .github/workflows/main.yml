@@ -14,24 +14,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Force KSP and Gradle Settings
-        run: |
-          touch gradle.properties
-          echo "org.gradle.daemon=false" >> gradle.properties
-          echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m" >> gradle.properties
-          echo "kotlin.compiler.execution.strategy=in-process" >> gradle.properties
-          echo "ksp.use.daemon=false" >> gradle.properties
-
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build Debug APK
-        run: gradle assembleDebug --no-parallel
+        run: gradle assembleDebug --no-daemon -Pksp.use.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
