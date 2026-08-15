@@ -14,20 +14,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Fix Missing Gradle Files automatically
+        run: |
+          if [ ! -f "gradlew" ]; then
+            gradle wrapper
+          fi
+          chmod +x gradlew || true
 
       - name: Build Debug APK
-        run: gradle assembleDebug --no-daemon -Pksp.use.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
+        run: ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx4g" -Dkotlin.compiler.execution.strategy=in-process
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Anamol-Wifi-APK
           path: app/build/outputs/apk/debug/*.apk
-          
