@@ -1,0 +1,6 @@
+{
+  "name": "Wi-Fi Scanner",
+  "description": "Scan and inspect nearby Wi-Fi networks with signal strength and detailed connection properties.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
