@@ -23,6 +23,13 @@ jobs:
         run: |
           keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US" || true
 
+      - name: Generate Gradle Wrapper Automatically
+        run: |
+          if [ ! -f "gradlew" ]; then
+            gradle wrapper
+          fi
+          chmod +x gradlew || true
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx4g" -Dkotlin.compiler.execution.strategy=in-process
 
